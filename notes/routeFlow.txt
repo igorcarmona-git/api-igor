@@ -1,0 +1,11 @@
+server.js > routes > controllers > models > databank (db)
+
+''''''''''''''' req.body ''''''''''
+{
+  "nome": "Igor Carmona",
+  "email": "fernandogenrie@gmail.com",
+  "telefone": "44999764569",
+  "nascimento": "2023-05-20",
+  "cpf": "94454226554",
+  "status": "ACTIVE"
+}

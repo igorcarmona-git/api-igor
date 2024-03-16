@@ -1,0 +1,43 @@
+Para criar um servidor node usando express:
+    criar uma pasta:
+        npm init -y
+        npm install express --save
+        criar arquivo index.js
+    
+    Cole o seguinte código no index.js:
+        const express = require('express');
+        const app = express();
+        const port = 3000;
+
+        // Rota padrão
+        app.get('/', (req, res) => {
+            res.send('Bem-vindo ao Express.js!');
+        });
+
+        // Iniciar o servidor
+        app.listen(port, () => {
+            console.log(`Servidor está rodando em http://localhost:${port}`);
+        });
+    
+    Executar o servidor:
+        node index.js
+
+Para instalar o nodemon: 
+    npm install --save-dev nodemon
+    adicionar em package.json:
+        "scripts": {
+            "start": "nodemon index.js",
+            "test": "echo \"Error: no test specified\" && exit 1"
+        },
+
+Modelo de ORM:
+	que é uma técnica de programação que facilita o acesso e manipulação de dados em um banco de dados relacional utilizando objetos em um sistema orientado a objetos. 
+	
+	O ORM permite que você trabalhe com os dados do banco de dados como se estivesse lidando com objetos em código, abstraindo a complexidade das consultas SQL diretamente.
+	
+	O exemplo dado mostra uma consulta SQL simples: "SELECT * FROM ORDERS WHERE ID = tal". Com o ORM, em vez de escrever essa consulta manualmente, você usaria métodos fornecidos pelo ORM para realizar a consulta de forma mais intuitiva e em um nível mais alto de abstração.
+	
+	https://sequelize.org/docs/v6/getting-started/
+	
+Padrão de API:
+	RESTFull --> pesquisar mais sobre
