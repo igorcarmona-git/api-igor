@@ -8,7 +8,7 @@ module.exports = db.define('person', {
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
   },
   telefone:{
     type: DataTypes.STRING,
@@ -25,7 +25,7 @@ module.exports = db.define('person', {
   },
   status:{
     type: DataTypes.ENUM,
-    values: ["ACTIVE", "OFF"],
+    values: ["ACTIVE", "INACTIVE"],
     defaultValue: 'ACTIVE', 
   }
 });

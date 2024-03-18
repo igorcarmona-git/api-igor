@@ -1,0 +1,12 @@
+
+No Express, quando você deseja editar os dados de uma pessoa já existente, você geralmente utiliza o método HTTP PUT ou PATCH. Aqui está a diferença entre eles:
+
+- PUT: Este método é utilizado para atualizar completamente os dados de um recurso. Quando você utiliza o método PUT, você envia todas as informações do recurso, inclusive aquelas que não estão sendo alteradas. Portanto, ao receber uma requisição PUT, o servidor substitui completamente os dados do recurso existente pelos dados enviados na requisição.
+
+- PATCH: Este método é utilizado para atualizar parcialmente os dados de um recurso. Ao contrário do PUT, com PATCH, você envia apenas as informações que estão sendo alteradas. Isso permite atualizar apenas os campos específicos do recurso, sem substituir os dados existentes.
+
+Se você está enviando todas as informações da pessoa, inclusive aquelas que não estão sendo alteradas, você pode utilizar PUT.
+Se você está enviando apenas as informações que estão sendo alteradas, você pode utilizar PATCH.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
