@@ -67,7 +67,7 @@ const isValidEmail = (email) => {
 }
 
 const isValidTelefone = (tel) => {
-    const telefoneRegex = /^\(\d{2}\)\d{5}-\d{4}$/;
+    const telefoneRegex = /^\d{2}\d{5}-\d{4}$/;
     return telefoneRegex.test(tel);
 }
 
@@ -84,6 +84,10 @@ const upperCase = (nome, status) => {
         nomeFormatted,
         statusFormatted
     }
+}
+
+const verifyNameLenght = (nome) => {
+    return nome.length >= 10;
 }
 
 // Middlewares
@@ -107,7 +111,7 @@ const listPeople = async (req, res) => {
         const allPeople = await people.findAll();
 
         if(!allPeople.length){
-            return res.status(404).send({message:"Não há dados para serem retornados!"})
+            return res.status(404).send({ message: "Não há dados para serem retornados!"})
         }
 
         return res.status(200).send(allPeople);
@@ -131,13 +135,11 @@ const getPersonByCPF = async (req, res) => {
             return res.status(404).send({ message: "Não consta registros deste CPF em nosso banco de dados!" })
         }   
     }catch(error){
-        console.log(error);
         return res.status(500).send({ message: "Ocorreu um erro ao buscar dados deste CPF!" });
     }
 }
 
 const createPerson = async (req, res) => {
-    console.log(`Estou dentro do CreatePerson... ${req.body}`);
     // Extrai os dados da requisição
     const { nome, email, telefone, nascimento, cpf, status } = req.body;
 
@@ -163,16 +165,17 @@ const createPerson = async (req, res) => {
         if (!isValidStatus(status))
             return res.status(400).send({ message: "Status inválido. O status deve ser 'ACTIVE' ou 'INACTIVE'." });
 
+        if(!verifyNameLenght(nome))
+            return res.status(400).send({ message: "O nome preenchido é muito curto. Insira um nome completo." })
+
         const cpfExistsWithoutFormat = await cpfExists(cpf_format);
         if (cpfExistsWithoutFormat) 
             return res.status(400).send({ message: "Já existe uma pessoa cadastrada com este CPF!" });
 
         const newReq = { nome: nomeFormatted, email, telefone, nascimento: nascimentoFormatted, cpf: cpf_format, status: statusFormatted };
-        console.log(newReq);
         const person = await people.create(newReq);
         return res.status(201).send(person);
     } catch (error) {
-        console.log(error);
         return res.status(500).send({ message: "Ocorreu um erro ao adicionar dados!" });
     }
 };
@@ -196,6 +199,9 @@ const editPersonByCPF = async (req, res) => {
 
         if (!isValidStatus(status))
             return res.status(400).send({ message: "Status inválido. O status deve ser 'ACTIVE' ou 'INACTIVE'." });
+
+        if(!verifyNameLenght(nome))
+            return res.status(400).send({ message: "O nome preenchido é muito curto. Insira um nome completo." })
 
         const existsPerson = await people.findByPk(cpf_format);
         
@@ -222,7 +228,7 @@ const editPersonByCPF = async (req, res) => {
 };
 
 const deletePersonByCPF = async (req, res) => {
-    const cpf = req.params.cpf;
+    const cpf = req.params.cpf
     const cpf_format = cpf.replace(/[.-]/g, "");
 
     try{

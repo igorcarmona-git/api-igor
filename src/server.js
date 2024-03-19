@@ -9,8 +9,7 @@ APP.use(express.json()); // forma de se fazer middlewares, quando a requisição
 
 try{
     APP.use('/people', routerPerson);
-    APP.use('/people/cpf', routerPerson);
-
+    
     APP.listen(PORT, () => {
         console.log(`Running in http://localhost:${PORT}`);
     });
