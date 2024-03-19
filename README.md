@@ -31,7 +31,7 @@ Este é um trabalho acadêmico desenvolvido para a disciplina de Desenvolvimento
 
 ## Pré-requisitos
 
-Certifique-se de ter o ambiente de desenvolvimento Node.js configurado em sua máquina. Você pode seguir a [documentação oficial do Node.js](https://nodejs.org/pt-br/download/) para configurar o ambiente.
+Certifique-se de ter o ambiente de desenvolvimento Node.js configurado em sua máquina. Você pode seguir a [documentação oficial do Node.js](https://nodejs.org/en) para configurar o ambiente.
 
 ## Instalação
 
