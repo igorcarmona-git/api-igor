@@ -1,6 +1,6 @@
 # Trabalho Acadêmico: API REST para CRUD de Pessoas
 
-Este é um trabalho acadêmico desenvolvido para a disciplina de Desenvolvimento Web. A API foi construída utilizando Node.js, Nodemon, Express e Sequelize, com SQLite como banco de dados.
+Este é um trabalho acadêmico desenvolvido para a disciplina de Desenvolvimento Web. A API foi construída utilizando Node.js, Nodemon, Express, Sequelize-SQLite como banco de dados.
 
 ## Funcionalidades
 
