@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const db = require('../../src/infra/db')
+const db = require('../infra/db')
 
-module.exports = db.define('person', {
+const person = db.define('person', {
   nome: {
     type: DataTypes.STRING,
     allowNull: false
@@ -9,6 +9,7 @@ module.exports = db.define('person', {
   email: {
     type: DataTypes.STRING,
     allowNull: true,
+    unique: true
   },
   telefone:{
     type: DataTypes.STRING,
@@ -18,14 +19,14 @@ module.exports = db.define('person', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  cpf:{
-    type: DataTypes.STRING,
+  userId: {
+    type:  DataTypes.NUMBER,
     allowNull: false,
-    primaryKey: true,
-  },
-  status:{
-    type: DataTypes.ENUM,
-    values: ["ACTIVE", "INACTIVE"],
-    defaultValue: 'ACTIVE', 
+    unique: true
   }
 });
+
+person.associations = (models) => {
+  person.hasOne(models.user, { foreignKey: 'cpf', sourceKey: 'userId' })
+}
+
