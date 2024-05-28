@@ -1,4 +1,4 @@
-const people = require('../models/personModel');
+const userModel = require('../models/userModel');
 
 const validateCPF = (cpf) => {
     console.log("dentro do " + cpf)
@@ -57,9 +57,28 @@ const validateCPF = (cpf) => {
     return true;
 }
 
-const listPeople = async (req, res) => {
+const upperCase = (username, status) => {
+    const usernameFormatted = username.toUpperCase();
+    const statusFormatted = status.toUpperCase();
+
+    if(usernameFormatted && statusFormatted){
+        return {
+            usernameFormatted,
+            statusFormatted
+        }
+    }
+}
+
+const formatCPF = (cpf) => {
+    const cpf_format = cpf.replace(/[.-]/g, "");
+    return cpf_format;
+}
+
+// ----------------------------------------------------------------------------------------------------------
+
+const listUsers = async (req, res) => {
     try {
-        const allPeople = await people.findAll();
+        const allPeople = await userModel.findAll();
 
         if(!allPeople.length){
             return res.status(404).send({ message: "Não há dados para serem retornados!"})
@@ -72,40 +91,48 @@ const listPeople = async (req, res) => {
     }
 };
 
-const getPersonByCPF = async (req, res) => {
-    const cpf = req.params.cpf;
+const getUser = async (req, res) => {
+    const username = req.params.username.toUpperCase();
 
     try{
-        if(validateCPF(cpf)){
-            const person = await people.findByPk(cpf);
+        if(username){
+            const person = await userModel.findOne({ where: { username } });
 
             if(person)
                 return res.status(200).send(person)
 
-            return res.status(404).send({ message: "Não consta registros deste CPF em nosso banco de dados!" })
+            return res.status(404).send({ message: "Não consta registros deste usuário em nosso banco de dados!" })
         }   
     }catch(error){
-        return res.status(500).send({ message: "Ocorreu um erro ao buscar dados deste CPF!" });
+        return res.status(500).send({ message: "Ocorreu um erro ao buscar dados deste usuário!" });
     }
 }
 
-const createPerson = async (req, res) => {
+const createUser = async (req, res) => {
     // Extrai os dados da requisição
-    const { nome, email, telefone, nascimento, cpf, status } = req.body;
+    const {username, email, password, cpf, status} = req.body;
+    const {usernameFormatted, statusFormatted} = upperCase(username, status)
+    const cpfFormatted = formatCPF(cpf);
 
     // Verifique se todos os campos obrigatórios estão presentes
-    if (!nome || !email || !telefone || !nascimento || !cpf || !status) {
+    if (!usernameFormatted || !email || !password || !cpf || !statusFormatted) {
         return res.status(400).send({ message: "Todos os campos são obrigatórios!" });
     }
 
     try {
-        if (!validateCPF(cpf)) 
+        if (!validateCPF(cpfFormatted)) 
             return res.status(400).send({ message: "CPF inválido. Digite um CPF válido!" });
 
-        console.log("passei antes do newREQ")
-        const newReq = { nome, email, telefone, nascimento, cpf, status };
+        const newReq = {
+            username: usernameFormatted, 
+            email, 
+            password, 
+            cpf: cpfFormatted, 
+            status: statusFormatted
+        };
+
         console.log(newReq)
-        const person = await people.create(newReq);
+        const person = await userModel.create(newReq);
 
         return res.status(201).send(person);
     } catch (error) {
@@ -113,30 +140,28 @@ const createPerson = async (req, res) => {
     }
 };
 
-const editPersonByCPF = async (req, res) => {
-    const { nome, email, telefone, nascimento, cpf, status } = req.body;
+const editUser = async (req, res) => {
+    const {username, email, password, cpf, status} = req.body;
+    const {usernameFormatted, statusFormatted} = upperCase(username, status)
+    const cpfFormatted = formatCPF(cpf);
 
     try {
-        if (!validateCPF(cpf))
+        if (!validateCPF(cpfFormatted))
             return res.status(400).send({ message: "CPF inválido. Digite um CPF válido!" });
 
-        const existsPerson = await people.findByPk(cpf);
+        const existsPerson = await userModel.findOne({ where: { username: usernameFormatted } });
         
         if (!existsPerson)
-            return res.status(404).send({ message: "A pessoa com este CPF não foi encontrada." });
-
-        const dataPerson = existsPerson;
-    
-        // Atualiza os dados da pessoa
-        dataPerson.nome = nome;
-        dataPerson.email = email;
-        dataPerson.telefone = telefone;
-        dataPerson.nascimento = nascimento;
-        dataPerson.cpf = cpf;
-        dataPerson.status = status;
+            return res.status(404).send({ message: "A pessoa com este usuário não foi encontrada." });
 
         // Salva as alterações no banco de dados
-        const updatedPerson = await dataPerson.save();
+        existsPerson.username = usernameFormatted;
+        existsPerson.email = email;
+        existsPerson.password = password;
+        existsPerson.cpf = cpfFormatted;
+        existsPerson.status = statusFormatted;
+
+        const updatedPerson = await existsPerson.save();
         return res.status(200).send(updatedPerson);
     } catch (error) {
         console.log(error);
@@ -144,20 +169,20 @@ const editPersonByCPF = async (req, res) => {
     }
 };
 
-const deletePersonByCPF = async (req, res) => {
-    const cpf = req.params.cpf
-    const cpf_format = cpf.replace(/[.-]/g, "");
+const deleteUser = async (req, res) => {
+    const username = req.params.username.toUpperCase();
 
     try{
-        if(validateCPF(cpf_format)){
-            const person = await people.destroy({ where: { cpf: cpf_format } });
-            return res.status(200).send({message: "Foi realizada a exclusão da pessoa em nosso sistema!"})
+        if(username){
+            await userModel.destroy({ where: { username } });
+            return res.status(200).send({message: "Foi realizada a exclusão de dados do usuário!"})
         }   
+        return res.status(404).send({ message: "Não consta registros deste usuário em nosso banco de dados!" })
     }catch(error){
         console.log(error);
-        return res.status(500).send({ message: "Ocorreu um erro ao realizar exclusão de dados no sistema!" });
+        return res.status(500).send({ message: "Ocorreu um erro na exclusão de dados!" });
     }
 }   
 
-module.exports = {listPeople, createPerson, getPersonByCPF, deletePersonByCPF, editPersonByCPF}
+module.exports = { listUsers, getUser, createUser, editUser, deleteUser };
 

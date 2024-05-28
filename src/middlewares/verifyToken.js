@@ -1,20 +1,27 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const verifyToken = (req, res, next) => {
-    const token = req.headers.authorization;
+    // .split(' ') --> divide a string em um array e pega o segundo elemento (token)
+    const token = req.headers.authorization.split(' ')[1];
+    const JWT_SECRET = process.env.JWT_SECRET;
 
     if (!token) {
         return res.status(401).json({ error: 'Token não fornecido' });
     }
 
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, (err) => {
+        console.log(JWT_SECRET)
+        console.log()
         if (err) {
-            return res.status(403).json({ error: 'Falha na autenticação do token' });
+            if (err.name === 'JsonWebTokenError') {
+                return res.status(403).json({ error: 'Token inválido', err });
+            } else if (err.name === 'TokenExpiredError') {
+                return res.status(403).json({ error: 'Token expirado' });
+            } else {
+                return res.status(500).json({ error: 'Erro ao verificar o token' });
+            }
         }
 
-        // Se o token for válido, você pode acessar os dados decodificados no objeto 'decoded'
-        req.user = decoded;
         next();
     });
 };

@@ -1,25 +1,16 @@
-const people = require('../models/personModel');
+const userModel = require('../models/userModel');
 
-const cpfExists = async (req, res, next) => {
-    const cpf = req.body.cpf;
+const userExists = async (req, res, next) => {
+    const username = req.body.username;
 
-    const person = await people.findByPk(cpf);
+    const person = await userModel.findOne({ where: { username } });
 
     //Faz a conversão do retorno para True ou False, se tiver qualquer coisa dentro é True, se tiver 0, null ou undefined é False.
     const existPerson = Boolean(person); 
 
     if(existPerson){
-        return res.status(400).send({ message: "Já existe uma pessoa cadastrada com este CPF!" });
+        return res.status(400).send({ message: "Já existe uma pessoa cadastrada com este usuário!" });
     }
-
-    return next();
-}
-
-const formatCPF = (req, res, next) => {
-    const cpf = req.body.cpf;
-
-    const cpf_format = cpf.replace(/[.-]/g, "");
-    req.body.cpf = cpf_format;
 
     return next();
 }
@@ -38,7 +29,7 @@ const isValidEmail = (req, res, next) => {
 }
 
 const isValidTelefone = (req, res, next) => {
-    const tel = req.body.telefone;
+    const tel = req.body.cellphone;
 
     const telefoneRegex = /^\d{2}\d{5}-\d{4}$/;
     const validTel = telefoneRegex.test(tel);
@@ -61,43 +52,19 @@ const isValidStatus = (req, res, next) => {
     return next();
 }
 
-const formatDATE = (req, res, next) => {
-    const date = req.body.nascimento;
-    
-    const nascimentoFormatted = new Date(date).toISOString().split('T')[0]; //Formata a data de nascimento para o formato "YYYY-MM-DD"
+const verifyUsernameLenght = (req, res, next) => {
+    const username = req.body.username;
 
-    if(nascimentoFormatted){
-        req.body.nascimento = nascimentoFormatted;
-        return next();
+    if(username.includes(" ")){
+        return res.status(400).send({ message: "Nome de usuário não pode conter espaços. Insira um nome de usuário sem espaços." });
     }
 
-    return res.status(400).send({ message: "Data de nascimento inválido. Digite uma data no formato 'YYYY-MM-DD'!" });
-}
-
-const upperCase = (req, res, next) => {
-    const { nome, status } = req.body;
-
-    const nomeFormatted = nome.toUpperCase();
-    const statusFormatted = status.toUpperCase();
-
-    if(nomeFormatted && statusFormatted){
-        req.body.nome = nomeFormatted;
-        req.body.status = statusFormatted;
-        return next();
-    }
-
-    return res.status(400).send({ message: "Nome ou status inválido. Insira um nome e um status!" });
-}
-
-const verifyNameLenght = (req, res, next) => {
-    const nome = req.body.nome;
-
-    if(!nome){
+    if(!username){
         return res.status(400).send({ message: "Nome inválido. Insira um nome!" });
     }
 
-    if(!nome.length >= 15){
-        return res.status(400).send({ message: "O nome preenchido é muito curto. Insira um nome completo." });
+    if(!username.length >= 5){
+        return res.status(400).send({ message: "O nome de usuário preenchido é muito curto. Insira um nome de usuário com pelo menos 5 caracteres." });
     }
     
     return next();
@@ -115,4 +82,4 @@ const isValidPassword = (req, res, next) => {
     return next();
 }
 
-module.exports = {cpfExists, isValidEmail, isValidTelefone, isValidStatus, formatDATE, upperCase, verifyNameLenght, formatCPF, isValidPassword}
+module.exports = {userExists, isValidEmail, isValidTelefone, isValidStatus, verifyUsernameLenght, isValidPassword}
