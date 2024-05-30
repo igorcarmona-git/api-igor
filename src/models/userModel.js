@@ -1,10 +1,17 @@
 const { DataTypes } = require('sequelize');
 const db = require('../infra/db')
-const User = db.define('user', {
+
+const User = db.define('Users', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
     username: {
         type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true
+        unique: true,
     },
     email: {
         type: DataTypes.STRING,
@@ -20,11 +27,11 @@ const User = db.define('user', {
         allowNull: false,
         unique: true
     },
-    status:{
+    status: {
         type: DataTypes.ENUM,
         values: ["ACTIVE", "INACTIVE"],
-        defaultValue: 'ACTIVE', 
+        defaultValue: 'ACTIVE',
     },
-})
+});
 
-module.exports = User
+module.exports = User;

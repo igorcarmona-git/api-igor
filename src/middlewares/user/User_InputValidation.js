@@ -1,9 +1,9 @@
-const userModel = require('../models/userModel');
+const userModel = require('../../models/userModel');
 
 const userExists = async (req, res, next) => {
-    const username = req.body.username;
+    const usernameFormatted = req.body.username.toUpperCase();
 
-    const person = await userModel.findOne({ where: { username } });
+    const person = await userModel.findOne({ where: { username: usernameFormatted } });
 
     //Faz a conversão do retorno para True ou False, se tiver qualquer coisa dentro é True, se tiver 0, null ou undefined é False.
     const existPerson = Boolean(person); 
@@ -11,7 +11,7 @@ const userExists = async (req, res, next) => {
     if(existPerson){
         return res.status(400).send({ message: "Já existe uma pessoa cadastrada com este usuário!" });
     }
-
+    
     return next();
 }
 

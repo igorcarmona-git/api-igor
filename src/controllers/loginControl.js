@@ -2,9 +2,16 @@ const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+const findInactiveUser = async (username) => {
+    const userInactive = await userModel.findOne({ where: { username: username, status: 'INACTIVE' } });
+
+    return Boolean(userInactive);
+}
+
 const doLogin = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET;
-    console.log(JWT_SECRET)
+
+    // Verifica se o corpo da requisição possui um username e uma senha
     const { username, password } = req.body;
     const usernameFormatted = username.toUpperCase();
 
@@ -13,7 +20,11 @@ const doLogin = async (req, res) => {
     }
 
     try {
-        const user = await userModel.findOne({ where: { username: usernameFormatted } });
+        const user = await userModel.findOne({ where: { username: usernameFormatted, status: 'ACTIVE' } });
+
+        if (await findInactiveUser(usernameFormatted)) {
+            return res.status(404).send({ message: 'Usuário inativo!' });
+        }
 
         if (!user) {
             return res.status(404).send({ message: 'Usuário ou senha inválidos!' });
@@ -28,7 +39,6 @@ const doLogin = async (req, res) => {
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
         return res.status(200).send({ token });
     } catch (error) {
-        console.error(error);
         return res.status(500).send({ message: 'Ocorreu um erro ao fazer login.' });
     }
 };

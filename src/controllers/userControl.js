@@ -57,18 +57,6 @@ const validateCPF = (cpf) => {
     return true;
 }
 
-const upperCase = (username, status) => {
-    const usernameFormatted = username.toUpperCase();
-    const statusFormatted = status.toUpperCase();
-
-    if(usernameFormatted && statusFormatted){
-        return {
-            usernameFormatted,
-            statusFormatted
-        }
-    }
-}
-
 const formatCPF = (cpf) => {
     const cpf_format = cpf.replace(/[.-]/g, "");
     return cpf_format;
@@ -111,7 +99,8 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
     // Extrai os dados da requisição
     const {username, email, password, cpf, status} = req.body;
-    const {usernameFormatted, statusFormatted} = upperCase(username, status)
+    const usernameFormatted = username.toUpperCase();
+    const statusFormatted = status.toUpperCase();
     const cpfFormatted = formatCPF(cpf);
 
     // Verifique se todos os campos obrigatórios estão presentes
@@ -130,8 +119,6 @@ const createUser = async (req, res) => {
             cpf: cpfFormatted, 
             status: statusFormatted
         };
-
-        console.log(newReq)
         const person = await userModel.create(newReq);
 
         return res.status(201).send(person);
@@ -142,7 +129,8 @@ const createUser = async (req, res) => {
 
 const editUser = async (req, res) => {
     const {username, email, password, cpf, status} = req.body;
-    const {usernameFormatted, statusFormatted} = upperCase(username, status)
+    const usernameFormatted = username.toUpperCase();
+    const statusFormatted = status.toUpperCase();
     const cpfFormatted = formatCPF(cpf);
 
     try {
@@ -170,11 +158,12 @@ const editUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    const username = req.params.username.toUpperCase();
+    const username = req.params.username
+    const usernameFormatted = username.toUpperCase();
 
     try{
-        if(username){
-            await userModel.destroy({ where: { username } });
+        if(usernameFormatted){
+            await userModel.destroy({ where: { username: usernameFormatted } });
             return res.status(200).send({message: "Foi realizada a exclusão de dados do usuário!"})
         }   
         return res.status(404).send({ message: "Não consta registros deste usuário em nosso banco de dados!" })
@@ -184,5 +173,23 @@ const deleteUser = async (req, res) => {
     }
 }   
 
-module.exports = { listUsers, getUser, createUser, editUser, deleteUser };
+const findAllActiveUsers = async (req, res) => {
+    try{
+        const activeUsers = await userModel.findAll({ where: { status: "ACTIVE" } });
+        return res.status(200).send(activeUsers);
+    }catch(error){
+        return res.status(500).send({ message: "Ocorreu um erro ao buscar usuários ativos!" });
+    }
+}
+
+const findAllInactiveUsers = async (req, res) => {
+    try{
+        const inactiveUsers = await userModel.findAll({ where: { status: "INACTIVE" } });
+        return res.status(200).send(inactiveUsers);
+    }catch(error){
+        return res.status(500).send({ message: "Ocorreu um erro ao buscar usuários inativos!" });
+    }
+}
+
+module.exports = { listUsers, getUser, createUser, editUser, deleteUser, findAllActiveUsers, findAllInactiveUsers };
 
