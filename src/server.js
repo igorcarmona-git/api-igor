@@ -1,9 +1,19 @@
+// working tools application
 const express = require("express");
 const cors = require('cors');
-const routerPerson = require('../src/routes/personRoute');
 const APP = express();
 const PORT = 3003;
 const db = require('./infra/db');
+const dotenv = require('dotenv');
+
+//ROUTES imports
+const loginRoute = require("./routes/loginRoute");
+const userRoute = require('../src/routes/userRoute');
+const profileRoute = require("./routes/profileRoute");
+const reportsRoute = require("./routes/reportsRoute");
+
+// dotenv --> para ler arquivos .env
+dotenv.config();
 
 //tem que colocar esse db.sync() para sincronizar os dados com o banco
 db.sync(); 
@@ -15,13 +25,16 @@ APP.use(express.json());
 APP.use(cors( {origin: '*'} )); 
 
 try{
-    APP.use('/people', routerPerson);
+    APP.use('/users', userRoute);
+    APP.use('/login', loginRoute);
+    APP.use('/profiles', profileRoute);
+    APP.use('/reports', reportsRoute);
     
     APP.listen(PORT, () => {
         console.log(`Running in http://localhost:${PORT}`);
     });
 }catch(error){
-    console.log(error);
+    return console.log(error);
 }
 
 
