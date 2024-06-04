@@ -11,6 +11,7 @@ const loginRoute = require("./routes/loginRoute");
 const userRoute = require('../src/routes/userRoute');
 const profileRoute = require("./routes/profileRoute");
 const reportsRoute = require("./routes/reportsRoute");
+const uploadRoute = require("./routes/uploadFiles/uploadRoute");
 
 // dotenv --> para ler arquivos .env
 dotenv.config();
@@ -29,9 +30,11 @@ try{
     APP.use('/login', loginRoute);
     APP.use('/profiles', profileRoute);
     APP.use('/reports', reportsRoute);
+    APP.use('/uploads', uploadRoute);
     
     APP.listen(PORT, () => {
         console.log(`Running in http://localhost:${PORT}`);
+        console.log('The ambient is:', process.env.NODE_ENV);
     });
 }catch(error){
     return console.log(error);
