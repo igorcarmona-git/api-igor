@@ -5,12 +5,13 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set NODE_ENV=production && nodemon ./src/server.js",
-    "dev": "set NODE_ENV=development && nodemon ./src/server.js"
+    "start": "NODE_ENV=production nodemon ./src/server.js",
+    "dev": "NODE_ENV=development nodemon ./src/server.js"
   },
   "author": "Igor",
   "license": "ISC",
   "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.37",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

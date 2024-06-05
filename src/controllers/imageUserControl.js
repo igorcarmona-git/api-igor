@@ -1,9 +1,12 @@
 const { User, Image } = require('../models/associations');
 
 const UploadImageUser = async (req, res) => {
+    console.log(req);
     try {
-        const { username } = req.params.toUpperCase();
-        const user = await User.findOne({ where: { username } });
+        const { username } = req.params;
+        const usernameFormatted = username.toUpperCase();
+
+        const user = await User.findOne({ where: { username: usernameFormatted } });
 
         if (!user) 
             return res.status(404).send({ message: "Nome de usuário inválido. Insira um nome de usuário!" });
@@ -19,9 +22,9 @@ const UploadImageUser = async (req, res) => {
             path: req.file.path,
             userId: user.id
         });
-        return res.status(201).send({ message: "Imagem enviada com sucesso!"}, image);
+        return res.status(201).send({ message: "Imagem enviada com sucesso!"});
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ message: "Ocorreu um erro ao enviar imagem!", error: error });
     }
 }
 

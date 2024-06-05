@@ -12,12 +12,11 @@ const findAllDataByUser = async (req, res) => {
             }]
         });
 
-        if (user){
-            res.status(200).send(user);
+        if (!user){
+            res.status(404).send({ message: 'Usuário não encontrado' });
         }
-       
-        res.status(404).send({ message: 'Usuário não encontrado' });
-       
+        
+        res.status(200).send(user);
     } catch (error) {
         res.status(500).send({ message: 'Erro ao buscar dados do usuário', error });
     }
