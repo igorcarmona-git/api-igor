@@ -2,12 +2,6 @@ const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const findInactiveUser = async (username) => {
-    const userInactive = await userModel.findOne({ where: { username: username, status: 'INACTIVE' } });
-
-    return Boolean(userInactive);
-}
-
 const doLogin = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -21,10 +15,6 @@ const doLogin = async (req, res) => {
 
     try {
         const user = await userModel.findOne({ where: { username: usernameFormatted, status: 'ACTIVE' } });
-
-        if (await findInactiveUser(usernameFormatted)) {
-            return res.status(404).send({ message: 'Usuário inativo!' });
-        }
 
         if (!user) {
             return res.status(404).send({ message: 'Usuário ou senha inválidos!' });
