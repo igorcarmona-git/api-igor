@@ -1,7 +1,8 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "src/infra/data/database.sqlite"
+    "storage": "src/infra/data/database.sqlite",
+    "logging": true
   },
   "test": {
     "dialect": "sqlite",
@@ -9,6 +10,7 @@
   },
   "production": {
     "dialect": "sqlite",
-    "storage": "src/infra/data/production-database.sqlite"
+    "storage": "src/infra/data/production-database.sqlite",
+    "logging": false
   }
 }
