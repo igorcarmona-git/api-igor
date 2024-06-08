@@ -1,12 +1,12 @@
 # Trabalho Acadêmico: API REST para CRUD de Pessoas
 
-Este é um trabalho acadêmico desenvolvido para a disciplina de Desenvolvimento Web. A API foi construída utilizando Node.js, Nodemon, Express, Sequelize-SQLite (como banco de dados), dotenv, cors, jsonwebtoken, bcrypt, multer.
+Este é um trabalho acadêmico desenvolvido para a disciplina de Desenvolvimento Web. A API foi construída utilizando Node.js, Nodemon, Express, Sequelize ORM, Postgree (como banco de dados), dotenv, cors, jsonwebtoken, bcrypt, multer.
 
 ## Funcionalidades
 
 - **CRUD**: A API oferece operações CRUD (Criar, Ler, Atualizar, Deletar) com validações baseadas nos dados fornecidos nas requisições HTTP.
 - **Autenticação criptografada**: Foi utilizado "bcrypt" para criptografar dados além de utilizar bearer tokens para rotas autenticadas.
-- **Consistência de Dados**: Utilizamos o SQLite para garantir a consistência e persistência dos dados.
+- **Consistência de Dados**: Utilizamos o postgree via cloud no Render para garantir a consistência e persistência dos dados.
 
 ### Endpoints
 **Users**:
