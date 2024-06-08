@@ -1,0 +1,9 @@
+//Este arquivo serve para dizer onde está o arquivo de configuração do sequelize.
+
+const path = require('path');
+
+//Exportar o caminho de onestá o arquivo de configuração.
+module.exports = {
+                        // dir        // file into dir
+    'config': path.resolve('config', 'config.js'),
+}

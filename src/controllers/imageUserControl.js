@@ -1,4 +1,4 @@
-const { User, Image } = require('../models/associations');
+const { User, Image } = require('../../models/associations');
 
 const UploadImageUser = async (req, res) => {
     console.log(req);

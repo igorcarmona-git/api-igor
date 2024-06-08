@@ -1,4 +1,5 @@
-const userModel = require('../models/userModel');
+const db = require('../infra/db');
+const userModel = require('../../models/userModel');
 
 const validateCPF = (cpf) => {
     console.log("dentro do " + cpf)

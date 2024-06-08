@@ -1,4 +1,4 @@
-const {User, Profile} = require('../../models/associations');
+const {User, Profile} = require('../../../models/associations');
 
 const findAllDataByUser = async (req, res) => {
     try {

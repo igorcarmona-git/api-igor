@@ -6,6 +6,16 @@ const PORT = 3003;
 const db = require('./infra/db');
 const dotenv = require('dotenv');
 
+// testa conexão com o banco de dados.
+const testConnectionDB = async () => {
+    try {
+        await db.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
+
 //ROUTES imports
 const loginRoute = require("./routes/loginRoute");
 const userRoute = require('../src/routes/userRoute');
@@ -17,7 +27,8 @@ const uploadRoute = require("./routes/uploadFiles/uploadRoute");
 dotenv.config();
 
 //tem que colocar esse db.sync() para sincronizar os dados com o banco
-db.sync(); 
+testConnectionDB();
+db.sync();
 
 // forma de se fazer middlewares, quando a requisição chega, como ele trata.
 APP.use(express.json()); 

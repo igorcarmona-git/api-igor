@@ -1,4 +1,4 @@
-const { User, Profile } = require('../models/associations');
+const { User, Profile } = require('../../models/associations');
 
 const getProfileByUser = async (req, res) => {
     try {

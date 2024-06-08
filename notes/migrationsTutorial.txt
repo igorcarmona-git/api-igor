@@ -1,0 +1,21 @@
+Para instalar as dependencias:
+    npm i sequelize
+
+Para gerar migrations:
+    npx sequelize-cli migration:generate --name alterUser-table 
+
+Para rodar as migrations:
+    npx sequelize-cli db:migrate
+
+Para desfazer as alterações da ultima migration executada:
+    npx sequelize-cli db:undo
+
+Para criar modelos e gerar suas migrations:
+    npx sequelize model:generate --name Users --attributes username:string,email:string,password:string,cpf:string,status:enum 
+
+Regras para se trabalhar com migrations:
+    1º Voce nunca vai la no banco de dados e faz as alterações, faça sempre pelas migrations
+    2º Voce não altera a migration, cada migration gerada é uma versão do banco de dados do tempo
+    3º Sempre que for fazer alteração no banco, deve-se sempre criar uma nova migration 
+
+Obs: A migration que você nunca altera quando cria novas e muda o banco de dados, os models seus sempre tem que ir e alterar para se espelhar ao banco de dados.

@@ -1,3 +1,12 @@
+const verifyDate = (birthdate) => {
+    const date = new Date(birthdate);
+
+    if (date.toString() === "Invalid Date") {
+        return false;
+    }
+    return true;
+}
+
 const profileValidation = (req, res, next) => {
     const BrazilStates = [
         "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", 
@@ -17,6 +26,10 @@ const profileValidation = (req, res, next) => {
 
     if (!birthdate) {
         return res.status(400).send({ message: "Data de nascimento obrigatória!" });
+    }
+
+    if(!verifyDate(birthdate)) {
+        return res.status(400).send({ message: "Data de nascimento inválida!" });
     }
 
     if(!BrazilStates.includes(state)) {

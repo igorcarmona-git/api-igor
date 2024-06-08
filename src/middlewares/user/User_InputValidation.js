@@ -1,4 +1,4 @@
-const userModel = require('../../models/userModel');
+const userModel = require('../../../models/userModel');
 
 const userExists = async (req, res, next) => {
     const usernameFormatted = req.body.username.toUpperCase();

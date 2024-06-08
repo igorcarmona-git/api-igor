@@ -9,3 +9,7 @@ server.js > routes > controllers > models > databank (db)
   "cpf": "94454226554",
   "status": "ACTIVE"
 }
+
+
+
+.sequelizerc --> Serve para configurar o arquivo de configuração do sequelize, utiliza o path para resolver o diretorio.
